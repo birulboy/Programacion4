@@ -24,7 +24,6 @@ def configurar_menus():
     jueves = MenuDia("jueves")
     jueves.agregar_plato(Plato("Cazuela de res",     12500))
     jueves.agregar_plato(Plato("Sopa de verduras",    8500, es_vegetariano=True))
-    jueves.agregar_plato(Plato("Sopa de verdurasee",    8500, es_vegetariano=True))
 
     viernes = MenuDia("viernes")
     viernes.agregar_plato(Plato("Trucha asada",      13000))
@@ -37,6 +36,24 @@ def configurar_menus():
     gestor.registrar_menu("viernes",   viernes)
 
     return gestor
+
+
+def seleccionar_menu(gestor):
+    print("\n¿Cómo deseas seleccionar el menú?")
+    print("  1. Menú de hoy (automático)")
+    print("  2. Elegir día manualmente")
+
+    while True:
+        opcion = input("  Opción (1/2): ").strip()
+        if opcion == "1":
+            return gestor.menu_de_hoy()
+        elif opcion == "2":
+            dia  = input("  Ingresa el día (lunes, martes, ...): ").strip()
+            menu = gestor.menu_por_dia(dia)
+            if menu:
+                return menu
+        else:
+            print("  Opción inválida, intenta de nuevo.")
 
 
 def pedir_datos_estudiante():
@@ -57,9 +74,25 @@ def pedir_datos_estudiante():
 
 def pedir_seleccion_plato(menu):
     while True:
+        preferencia = input("\n  Preferencia (estandar/vegetariano): ").strip().lower()
+        if preferencia in ("estandar", "vegetariano"):
+            break
+        print("  Preferencia inválida, intenta de nuevo.")
+
+    opciones = menu.seleccionar_opcion(preferencia)
+
+    if not opciones:
+        print("  No hay platos disponibles para esa preferencia.")
+        return None
+
+    print(f"\n  --- Opciones {preferencia} ---")
+    for i, plato in enumerate(opciones, start=1):
+        print(f"  {i}. {plato.descripcion_detallada()}")
+
+    while True:
         try:
             numero = int(input("\n  Elige tu plato (número): "))
-            plato  = menu.seleccionar_por_numero(numero)
+            plato  = menu.seleccionar_por_numero(opciones, numero)
             if plato:
                 return plato
             print("  Número fuera de rango, intenta de nuevo.")
@@ -69,7 +102,7 @@ def pedir_seleccion_plato(menu):
 
 def main():
     gestor = configurar_menus()
-    menu   = gestor.menu_de_hoy()
+    menu   = seleccionar_menu(gestor)
 
     if menu is None:
         return
@@ -81,7 +114,11 @@ def main():
 
         estudiante = pedir_datos_estudiante()
         plato      = pedir_seleccion_plato(menu)
-        tiquete    = procesador.generar_tiquete(estudiante, plato)
+
+        if plato is None:
+            continue
+
+        tiquete = procesador.generar_tiquete(estudiante, plato)
         procesador.validar_pago(tiquete["total"])
 
         otro = input("¿Atender otro estudiante? (s/n): ").strip().lower()

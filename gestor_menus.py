@@ -18,12 +18,13 @@ class GestorMenus:
 
     def registrar_menu(self, dia_semana, menu):
         self._menus[dia_semana.lower()] = menu
-
+    def menu_por_dia(self, dia):
+        return self._buscar_menu(dia.lower().strip())
     def menu_de_hoy(self):
         dia_hoy = DIAS_SEMANA[date.today().weekday()]
-        menu = self._menus.get(dia_hoy)
-
+        return self._buscar_menu(dia_hoy)
+    def _buscar_menu(self, dia):
+        menu = self._menus.get(dia)
         if menu is None:
-            print(f"No hay menú registrado para el {dia_hoy}.")
-
+            print(f"No hay menú registrado para el {dia}.")
         return menu

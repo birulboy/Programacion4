@@ -3,7 +3,7 @@ class Plato:
         self.nombre = nombre
         self._precio_base = precio_base
         self.es_vegetariano = es_vegetariano
- 
+    @property
     def precio(self):
         return self._precio_base
  

@@ -6,7 +6,7 @@ class ProcesadorVenta:
         self._ventas = []
  
     def generar_tiquete(self, estudiante, plato):
-        precio_base = plato.precio()
+        precio_base = plato.precio
         total       = estudiante.precio_final(precio_base)
         descuento   = estudiante.calcular_descuento(precio_base)
  
