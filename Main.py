@@ -1,4 +1,4 @@
-from plato import Plato
+from Plato import Plato
 from menu_dia import MenuDia
 from comensal import Comensal
 from procesador_venta import ProcesadorVenta
@@ -56,20 +56,35 @@ def seleccionar_menu(gestor):
             print("  Opción inválida, intenta de nuevo.")
 
 
-def pedir_datos_estudiante():
-    print("\n--- Datos del estudiante ---")
-    id_estudiante = input("  ID          : ").strip()
+def pedir_datos_cliente():
+    print("\n--- Datos del cliente ---")
+    id_cliente = input("  ID          : ").strip()
     nombre        = input("  Nombre      : ").strip()
+    
+    tipos_clientes = set()
+    tipos_subsidio = set()
 
-    tipos_validos = list(DESCUENTOS.keys())
-    print(f"  Tipos de subsidio: {', '.join(tipos_validos)}")
+    for cliente, subsidio in DESCUENTOS.keys():
+        tipos_clientes.add(cliente)
+        tipos_subsidio.add(subsidio)
+
+    print(f"  Tipos de subsidio: {', '.join(tipos_subsidio)}")
     while True:
-        tipo = input("  Tipo subsidio: ").strip().lower()
-        if tipo in tipos_validos:
+        tipo_subsidio_ = input("  Tipo subsidio: ").strip().lower()
+        if tipo_subsidio_ in tipos_subsidio:
             break
-        print(f"  Tipo inválido. Opciones: {', '.join(tipos_validos)}")
+        print(f"  Tipo inválido. Opciones: {', '.join(tipos_subsidio)}")
+        
+    print(f"  Tipos de cliente: {', '.join(tipos_clientes)}")
+        
+    while True:
+        tipo_cliente_ = input("  Tipo cliente: ").strip().lower()
+        if tipo_cliente_ in tipos_clientes:
+            break
+        print(f"  Tipo inválido. Opciones: {', '.join(tipos_clientes)}")
+        
 
-    return Comensal(id_estudiante, nombre, tipo)
+    return Comensal(id_cliente, nombre, tipo_subsidio_, tipo_cliente_)
 
 
 def pedir_seleccion_plato(menu):
@@ -112,16 +127,16 @@ def main():
     while True:
         menu.mostrar_menu()
 
-        estudiante = pedir_datos_estudiante()
+        cliente = pedir_datos_cliente()
         plato      = pedir_seleccion_plato(menu)
 
         if plato is None:
             continue
 
-        tiquete = procesador.generar_tiquete(estudiante, plato)
+        tiquete = procesador.generar_tiquete(cliente, plato)
         procesador.validar_pago(tiquete["total"])
 
-        otro = input("¿Atender otro estudiante? (s/n): ").strip().lower()
+        otro = input("¿Atender otro cliente? (s/n): ").strip().lower()
         if otro != "s":
             break
 
