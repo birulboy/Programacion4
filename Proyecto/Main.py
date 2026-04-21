@@ -1,4 +1,4 @@
-from Plato import Plato
+from plato import Plato
 from menu_dia import MenuDia
 from comensal import Comensal
 from procesador_venta import ProcesadorVenta
