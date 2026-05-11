@@ -29,7 +29,7 @@ def precargar_datos(crud: TiendaCrud):
 
 def main():
     crud = TiendaCrud()
-    precargar_datos(crud)  # ← pon el breakpoint aquí para el debug
+    precargar_datos(crud) 
     iniciar(crud)
 
 
